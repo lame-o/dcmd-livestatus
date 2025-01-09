@@ -75,26 +75,43 @@ bot_thread.start()
 @app.route("/discord-status")
 def get_status():
     logger.info(f"Current status: {current_status}")
-    response = jsonify({
-        "schemaVersion": 1,
-        "label": "Discord",
-        "message": current_status["status"],
-        "color": current_status["color"],
-        "style": "flat-square",
-        "namedLogo": "discord",
-        "cacheSeconds": 5
-    })
+    try:
+        badge_data = {
+            "schemaVersion": 1,
+            "label": "Discord",
+            "message": current_status["status"],
+            "color": current_status["color"],
+            "isError": False,
+            "namedLogo": "discord",
+            "logoColor": "white",
+            "style": "flat-square",
+            "cacheSeconds": 30
+        }
+    except Exception as e:
+        logger.error(f"Error generating badge: {str(e)}")
+        badge_data = {
+            "schemaVersion": 1,
+            "label": "Discord",
+            "message": "error",
+            "color": "red",
+            "isError": True
+        }
+
+    response = jsonify(badge_data)
     response.headers['Content-Type'] = 'application/json'
+    response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '0'
     return response
 
 # Add CORS support for the badge
 @app.after_request
 def after_request(response):
-    if response.headers.get('Content-Type') == 'application/json':
-        response.headers.add('Access-Control-Allow-Origin', '*')
-        response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
-        response.headers.add('Access-Control-Allow-Methods', 'GET')
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
+    response.headers.add('Access-Control-Allow-Methods', 'GET')
     return response
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)), debug=True, use_reloader=False)
+    # Disable Flask's reloader when running with discord.py
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)), debug=False)
