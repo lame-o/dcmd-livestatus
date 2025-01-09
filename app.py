@@ -7,6 +7,8 @@ import logging
 import asyncio
 import threading
 import nest_asyncio
+import redis
+import json
 
 # Enable nested event loops
 nest_asyncio.apply()
@@ -21,12 +23,32 @@ app = Flask(__name__)
 
 DISCORD_TOKEN = os.getenv('DISCORD_TOKEN')
 USER_ID = int(os.getenv('DISCORD_USER_ID'))
+REDIS_URL = os.getenv('REDIS_URL', 'redis://localhost:6379')
 
-# Global variable to store current status
-current_status = {
+# Initialize Redis
+redis_client = redis.from_url(REDIS_URL)
+
+# Default status
+DEFAULT_STATUS = {
     "status": "Offline",
     "color": "gray"
 }
+
+def get_current_status():
+    try:
+        status = redis_client.get('discord_status')
+        if status:
+            return json.loads(status)
+        return DEFAULT_STATUS
+    except Exception as e:
+        logger.error(f"Error getting status from Redis: {str(e)}")
+        return DEFAULT_STATUS
+
+def set_current_status(status):
+    try:
+        redis_client.set('discord_status', json.dumps(status))
+    except Exception as e:
+        logger.error(f"Error setting status in Redis: {str(e)}")
 
 class DiscordBot(discord.Client):
     def __init__(self):
@@ -64,16 +86,18 @@ class DiscordBot(discord.Client):
         try:
             logger.info(f"Updating status for {member.name}: {member.status}")
             
+            new_status = {}
             if member.status == discord.Status.online:
-                current_status.update({"status": "Online", "color": "brightgreen"})
+                new_status = {"status": "Online", "color": "brightgreen"}
             elif member.status == discord.Status.idle:
-                current_status.update({"status": "Idle", "color": "yellow"})
+                new_status = {"status": "Idle", "color": "yellow"}
             elif member.status == discord.Status.dnd:
-                current_status.update({"status": "Do Not Disturb", "color": "red"})
+                new_status = {"status": "Do Not Disturb", "color": "red"}
             else:
-                current_status.update({"status": "Offline", "color": "gray"})
+                new_status = {"status": "Offline", "color": "gray"}
             
-            logger.info(f"Status updated to: {current_status}")
+            set_current_status(new_status)
+            logger.info(f"Status updated to: {new_status}")
         except Exception as e:
             logger.error(f"Error updating status: {str(e)}")
 
@@ -99,6 +123,7 @@ bot_thread.start()
 @app.route("/discord-status")
 def get_status():
     try:
+        current_status = get_current_status()
         badge_data = {
             "schemaVersion": 1,
             "label": "Discord",
