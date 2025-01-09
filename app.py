@@ -138,8 +138,7 @@ def get_status():
             "isError": False,
             "namedLogo": "discord",
             "logoColor": "white",
-            "style": "flat-square",
-            "cacheSeconds": 5
+            "style": "flat-square"
         }
     except Exception as e:
         logger.error(f"Error generating badge: {str(e)}")
@@ -154,20 +153,26 @@ def get_status():
     response = jsonify(badge_data)
     response.headers.update({
         'Content-Type': 'application/json',
-        'Cache-Control': 'max-age=0, no-cache, no-store, must-revalidate, private',
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
         'Pragma': 'no-cache',
-        'Expires': '-1',
-        'ETag': f"{current_status['status']}-{current_status['color']}"  # Add ETag for cache validation
+        'Expires': '0'
     })
     return response
+
+@app.route("/refresh")
+def refresh():
+    try:
+        current_status = get_current_status()
+        return jsonify({"status": "success", "current_status": current_status})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
 
 @app.after_request
 def after_request(response):
     response.headers.update({
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Headers': 'Content-Type',
-        'Access-Control-Allow-Methods': 'GET',
-        'Access-Control-Max-Age': '0'
+        'Access-Control-Allow-Methods': 'GET'
     })
     return response
 

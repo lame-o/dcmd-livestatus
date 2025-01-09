@@ -1,6 +1,6 @@
 # Discord Status Badge
 
-[![Discord Status](https://img.shields.io/endpoint?url=https://dcmd-livestatus.onrender.com/discord-status%3Ft%3D{timestamp}&cacheSeconds=5)](https://discord.com/users/201528698531217408)
+[![Discord Status](https://img.shields.io/endpoint?style=flat-square&url=https%3A%2F%2Fdcmd-livestatus.onrender.com%2Fdiscord-status)](https://discord.com/users/201528698531217408)
 
 This project creates a dynamic badge that displays your Discord activity status in your GitHub README.
 
@@ -54,7 +54,7 @@ This project creates a dynamic badge that displays your Discord activity status 
 
 Once deployed, add this to your GitHub README.md:
 ```markdown
-[![Discord Status](https://img.shields.io/endpoint?url=https://your-app-url.onrender.com/discord-status%3Ft%3D{timestamp}&cacheSeconds=5)](https://discord.com/users/your-discord-id)
+[![Discord Status](https://img.shields.io/endpoint?style=flat-square&url=https%3A%2F%2Fyour-app-url.onrender.com%2Fdiscord-status)](https://discord.com/users/your-discord-id)
 ```
 
 Replace:
