@@ -75,21 +75,25 @@ bot_thread.start()
 @app.route("/discord-status")
 def get_status():
     logger.info(f"Current status: {current_status}")
-    return jsonify({
+    response = jsonify({
         "schemaVersion": 1,
         "label": "Discord",
         "message": current_status["status"],
         "color": current_status["color"],
         "style": "flat-square",
+        "namedLogo": "discord",
         "cacheSeconds": 5
     })
+    response.headers['Content-Type'] = 'application/json'
+    return response
 
 # Add CORS support for the badge
 @app.after_request
 def after_request(response):
-    response.headers.add('Access-Control-Allow-Origin', '*')
-    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
-    response.headers.add('Access-Control-Allow-Methods', 'GET')
+    if response.headers.get('Content-Type') == 'application/json':
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
+        response.headers.add('Access-Control-Allow-Methods', 'GET')
     return response
 
 if __name__ == "__main__":

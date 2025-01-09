@@ -1,6 +1,6 @@
 # Discord Status Badge
 
-![Discord Status](https://your-app-url.onrender.com/discord-status)
+![Discord Status](https://img.shields.io/endpoint?url=https://your-app-url.onrender.com/discord-status)
 
 This project creates a dynamic badge that displays your Discord activity status in your GitHub README.
 
@@ -51,7 +51,7 @@ This project creates a dynamic badge that displays your Discord activity status 
 
 Once deployed, add this to your GitHub README.md:
 ```markdown
-![Discord Status](https://your-app-url.onrender.com/discord-status)
+![Discord Status](https://img.shields.io/endpoint?url=https://your-app-url.onrender.com/discord-status)
 ```
 
 Replace `your-app-url.onrender.com` with your actual Render deployment URL.
