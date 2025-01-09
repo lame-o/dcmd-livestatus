@@ -139,7 +139,7 @@ def get_status():
             "namedLogo": "discord",
             "logoColor": "white",
             "style": "flat-square",
-            "cacheSeconds": 5  # Reduced cache time
+            "cacheSeconds": 5
         }
     except Exception as e:
         logger.error(f"Error generating badge: {str(e)}")
@@ -156,7 +156,8 @@ def get_status():
         'Content-Type': 'application/json',
         'Cache-Control': 'max-age=0, no-cache, no-store, must-revalidate, private',
         'Pragma': 'no-cache',
-        'Expires': '-1'
+        'Expires': '-1',
+        'ETag': f"{current_status['status']}-{current_status['color']}"  # Add ETag for cache validation
     })
     return response
 

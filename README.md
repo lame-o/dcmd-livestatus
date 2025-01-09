@@ -1,6 +1,6 @@
 # Discord Status Badge
 
-[![Discord Status](https://img.shields.io/endpoint?url=https://dcmd-livestatus.onrender.com/discord-status&cache=0&style=flat-square)](https://discord.com/users/your-discord-id)
+[![Discord Status](https://img.shields.io/endpoint?url=https://dcmd-livestatus.onrender.com/discord-status%3Ft%3D{timestamp}&cacheSeconds=5)](https://discord.com/users/201528698531217408)
 
 This project creates a dynamic badge that displays your Discord activity status in your GitHub README.
 
@@ -27,6 +27,7 @@ This project creates a dynamic badge that displays your Discord activity status 
    ```
    DISCORD_TOKEN=your_bot_token_here
    DISCORD_USER_ID=your_discord_user_id
+   REDIS_URL=your_redis_url  # Only needed for production
    ```
 
 3. Install Dependencies:
@@ -44,17 +45,21 @@ This project creates a dynamic badge that displays your Discord activity status 
    - Add Environment Variables:
      - `DISCORD_TOKEN`
      - `DISCORD_USER_ID`
+     - `REDIS_URL`
 
-4. Deploy!
+4. Create a Redis instance on Render
+5. Deploy!
 
 ## Usage
 
 Once deployed, add this to your GitHub README.md:
 ```markdown
-[![Discord Status](https://img.shields.io/endpoint?url=https://your-app-url.onrender.com/discord-status&style=flat-square)](https://discord.com/users/your-discord-id)
+[![Discord Status](https://img.shields.io/endpoint?url=https://your-app-url.onrender.com/discord-status%3Ft%3D{timestamp}&cacheSeconds=5)](https://discord.com/users/your-discord-id)
 ```
 
-Replace `your-app-url.onrender.com` with your actual Render deployment URL.
+Replace:
+- `your-app-url.onrender.com` with your actual Render deployment URL
+- `your-discord-id` with your Discord user ID
 
 ## Local Development
 
