@@ -14,7 +14,11 @@ import json
 nest_asyncio.apply()
 
 # Set up logging
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s %(levelname)s: %(message)s',
+    datefmt='%Y-%m-%d %H:%M:%S'
+)
 logger = logging.getLogger(__name__)
 
 load_dotenv()
@@ -124,6 +128,8 @@ bot_thread.start()
 def get_status():
     try:
         current_status = get_current_status()
+        logger.info(f"Serving status: {current_status}")
+        
         badge_data = {
             "schemaVersion": 1,
             "label": "Discord",
@@ -133,7 +139,7 @@ def get_status():
             "namedLogo": "discord",
             "logoColor": "white",
             "style": "flat-square",
-            "cacheSeconds": 30
+            "cacheSeconds": 5  # Reduced cache time
         }
     except Exception as e:
         logger.error(f"Error generating badge: {str(e)}")
@@ -148,9 +154,9 @@ def get_status():
     response = jsonify(badge_data)
     response.headers.update({
         'Content-Type': 'application/json',
-        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Cache-Control': 'max-age=0, no-cache, no-store, must-revalidate, private',
         'Pragma': 'no-cache',
-        'Expires': '0'
+        'Expires': '-1'
     })
     return response
 
@@ -159,7 +165,8 @@ def after_request(response):
     response.headers.update({
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Headers': 'Content-Type',
-        'Access-Control-Allow-Methods': 'GET'
+        'Access-Control-Allow-Methods': 'GET',
+        'Access-Control-Max-Age': '0'
     })
     return response
 
