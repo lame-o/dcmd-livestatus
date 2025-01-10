@@ -6,7 +6,7 @@ This project creates a dynamic badge that displays your Discord activity status 
 
 ## Features
 - Real-time Discord status updates
-- Beautiful flat-square style badge
+- Beautiful round style badge
 - Updates every 5 seconds
 - Shows Online/Idle/Do Not Disturb/Offline status
 
