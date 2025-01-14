@@ -145,9 +145,12 @@ def get_status():
         badge_data = {
             "schemaVersion": 1,
             "label": "Discord",
-            "message": "error",
-            "color": "red",
-            "isError": True
+            "message": "Offline",
+            "color": "gray",
+            "isError": False,
+            "namedLogo": "discord",
+            "logoColor": "white",
+            "style": "flat-square"
         }
 
     response = jsonify(badge_data)
